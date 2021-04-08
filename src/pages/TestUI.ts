@@ -9,12 +9,13 @@ import { AssetLoader } from '../services/AssetLoader';
 import { DragonSpriteBasic } from '../components/DragonAvatar/DragonSpriteBasic';
 import { TooltipReader } from '../components/tooltip/TooltipReader';
 import { BlankUI } from './BlankUI';
+import { Colors } from '../data/Colors';
 
 export class TestUI extends BaseUI {
   private title: PIXI.Text;
 
   constructor() {
-    super({bgColor: 0x777777});
+    super({bgColor: Colors.BACKGROUND});
 
     AssetLoader.getBody('sheep', data => {
       let dragon = new DragonSpriteBasic(data);
@@ -42,7 +43,6 @@ export class TestUI extends BaseUI {
       new JMTween({percent: 0}, 5000).to({percent: 1}).start().onUpdate(obj => {
         icon.clear().beginFill(0xff0000).lineStyle(2)
           .moveTo(width / 2, width / 2)
-          // .lineTo(0, width / 2)
           .arc(width / 2, width / 2, width / 2, - Math.PI / 2, - Math.PI / 2 + Math.PI * 2 - Math.PI * 2 * obj.percent)
           .lineTo(width / 2, width / 2);
       });

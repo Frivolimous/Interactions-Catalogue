@@ -12,9 +12,11 @@ import { ScreenCover } from './JMGE/effects/ScreenCover';
 import { Navbar } from './pages/_Navbar';
 import { TextureData } from './data/TextureData';
 import { FontLoader } from './services/FontLoader';
+import { DragTargetUI } from './pages/DragTargetUI';
+import { BlankUI } from './pages/BlankUI';
+import { TestUI } from './pages/TestUI';
 
 export let interactionMode: 'desktop'|'mobile' = 'desktop';
-export let DEBUG_MODE = true;
 
 export let Facade = new class FacadeInner {
   private static exists = false;
@@ -37,6 +39,15 @@ export let Facade = new class FacadeInner {
       interactionMode = 'mobile';
     } catch (e) {
 
+    }
+
+    let border = this.queryURLParameter('border');
+    let navbar = this.queryURLParameter('navbar');
+    if (border && border === 'TRUE') {
+      CONFIG.INIT.BORDER = true;
+    }
+    if (navbar && navbar === 'TRUE') {
+      CONFIG.INIT.NAVBAR = true;
     }
 
     // Setup PIXI
@@ -80,21 +91,27 @@ export let Facade = new class FacadeInner {
     let fonts: string[] = _.map(Fonts);
 
     // load fonts then preloader!
-    GameEvents.APP_LOG.publish({type: 'INITIALIZE', text: 'Primary Setup'});
+    // GameEvents.APP_LOG.publish({type: 'INITIALIZE', text: 'Primary Setup'});
+    console.log('INITIALIZE: Setup');
     window.requestAnimationFrame(() => FontLoader.load(fonts).then(this.init));
   }
 
   public init = () => {
     // this will happen after 'preloader'
-    GameEvents.APP_LOG.publish({type: 'INITIALIZE', text: 'Post-Loader'});
+    // GameEvents.APP_LOG.publish({type: 'INITIALIZE', text: 'Post-Loader'});
+    console.log('INITIALIZE: Ready');
 
-    let menu = new MenuUI();
+    let startingPage = this.queryURLParameter('page');
+    switch (startingPage) {
+      case 'drag-target': this.currentPage = new DragTargetUI(); break;
+      case 'blank': this.currentPage = new BlankUI(); break;
+      case 'test': this.currentPage = new TestUI(); break;
+      default: this.currentPage = new MenuUI(); break;
+    }
+    this.screen.addChild(this.currentPage);
+    this.currentPage.navIn();
 
-    this.currentPage = menu;
-    this.screen.addChild(menu);
-    menu.navIn();
-
-    if (DEBUG_MODE) {
+    if (CONFIG.INIT.NAVBAR) {
       let navbar = new Navbar();
       this.screen.addChild(navbar);
     }
@@ -151,5 +168,14 @@ export let Facade = new class FacadeInner {
     this.previousResize = {outerBounds: this.stageBorders, innerBounds: this.innerBorders};
 
     GameEvents.WINDOW_RESIZE.publish(this.previousResize);
+  }
+
+  private queryURLParameter(name: string, url: string = window.location.href) {
+      name = name.replace(/[\[\]]/g, '\\$&');
+      let regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
+      let results = regex.exec(url);
+      if (!results) return null;
+      if (!results[2]) return '';
+      return decodeURIComponent(results[2].replace(/\+/g, ' '));
   }
 }();

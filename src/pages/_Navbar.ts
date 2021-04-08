@@ -7,6 +7,7 @@ import { MenuUI } from './MenuUI';
 import { Facade } from '../index';
 import { BlankUI } from './BlankUI';
 import { TestUI } from './TestUI';
+import { DragTargetUI } from './DragTargetUI';
 
 export class Navbar extends PIXI.Container {
   private background = new PIXI.Graphics();
@@ -18,6 +19,7 @@ export class Navbar extends PIXI.Container {
     this.addChild(this.background);
     this.addContent('Main Menu', MenuUI);
     this.addContent('Testing Stuff', TestUI);
+    this.addContent('Drag Target', DragTargetUI);
     this.addContent('Nowhere', BlankUI, true);
   }
 

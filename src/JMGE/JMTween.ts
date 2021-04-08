@@ -177,6 +177,15 @@ export class JMTween<T = any> {
     return this;
   }
 
+  public reverse = () => {
+    this.properties.forEach(prop => {
+      if (prop.to) {
+        prop.to = -prop.to;
+      }
+    });
+    return this;
+  }
+
   public from = (props: Partial<T>, eased = true) => {
     for (let key of Object.keys(props)) {
       // @ts-ignore
@@ -575,6 +584,20 @@ export const JMEasing = {
     Out: (k: number) => {
 
       let s = 1.70158;
+
+      return --k * k * ((s + 1) * k + s) + 1;
+
+    },
+
+    ExageratedOut: (k: number) => {
+      let s = 5;
+
+      return --k * k * ((s + 1) * k + s) + 1;
+
+    },
+
+    GentleOut: (k: number) => {
+      let s = 0.737;
 
       return --k * k * ((s + 1) * k + s) + 1;
 

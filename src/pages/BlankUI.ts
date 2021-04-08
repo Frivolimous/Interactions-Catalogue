@@ -2,13 +2,14 @@ import * as PIXI from 'pixi.js';
 import { BaseUI } from './_BaseUI';
 import { Fonts } from '../data/Fonts';
 import { IResizeEvent } from '../services/GameEvents';
+import { Colors } from '../data/Colors';
 
 export class BlankUI extends BaseUI {
   private title: PIXI.Text;
 
   constructor() {
-    super({bgColor: 0x777777});
-    this.title = new PIXI.Text('Blank Page (WIP)', { fontSize: 30, fontFamily: Fonts.UI, fill: 0x3333ff });
+    super({bgColor: Colors.BACKGROUND});
+    this.title = new PIXI.Text('Blank Page (WIP)', { fontSize: 30, fontFamily: Fonts.UI, fill: Colors.TEXT });
     this.addChild(this.title);
   }
 

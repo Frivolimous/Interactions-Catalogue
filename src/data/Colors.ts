@@ -1,13 +1,14 @@
 export const Colors = {
-  DamageColor: {
-    Physical: 0xff4411,
-    Magical: 0xff00cc,
-    Chemical: 0xffcc00,
-    Holy: 0xffff00,
-    Dark: 0x770077,
-    Spirit:  0xffff00,
-    None: 0xffffff,
-  },
-  HealColor: 0x00ffff,
-  DefendColor: 0x22dd22,
+  BACKGROUND: 0xD0E0E3,
+  TARGET: 0xD9D9D9,
+  OUTLINE: 0x434343,
+  TEXT: 0x111111,
+  SELECTION: 0xFFFF00,
+  OPTIONS: [
+    0xFF0000,
+    0x00FF00,
+    0x4A86E8,
+    0xFF00FF,
+    0xFF9900,
+  ],
 };

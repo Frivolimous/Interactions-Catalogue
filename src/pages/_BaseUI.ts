@@ -15,15 +15,13 @@ export class BaseUI extends PIXI.Container {
   protected previousResize: IResizeEvent;
 
   protected dialogueWindow: BaseModal;
-
-  private saveCallback?: (finishNav: () => void) => void;
-
-  private background: PIXI.Graphics;
+  protected background: PIXI.Graphics;
 
   constructor(private config?: IBaseUI) {
     super();
     this.background = new PIXI.Graphics();
     this.addChild(this.background);
+    this.background.interactive = true;
     GameEvents.WINDOW_RESIZE.addListener(this.onResize);
     // this.positionElements(resize);
   }

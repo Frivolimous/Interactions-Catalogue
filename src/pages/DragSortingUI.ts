@@ -84,6 +84,8 @@ export class DragSortingUI extends BaseUI {
   }
 
   private runIdleHint = () => {
+    if (!this.draggable.exists) return;
+
     JMTweenEffect.Pop(this.draggable.graphic);
     JMTweenEffect.Pop(this.targets[1].graphic, 1.15).wait(300);
 

@@ -9,12 +9,18 @@ import { BlankUI } from './BlankUI';
 import { TestUI } from './TestUI';
 import { DragTargetUI } from './DragTargetUI';
 import { DragSortingUI } from './DragSortingUI';
+import { DragAllTargetUI } from './DragAllTargetUI';
+import { DragOptionInexhaustibleUI } from './DragOptionInexhaustibleUI';
+import { DragOptionSingleUI } from './DragOptionSingleUI';
 
 export const UIReferences: {name: string, query: string, class: any}[] = [
   {name: 'Main Menu', query: 'menu', class: MenuUI},
   {name: 'Testing', query: 'test', class: TestUI},
   {name: 'Drag Target', query: 'drag-target', class: DragTargetUI},
   {name: 'Drag Sorting', query: 'drag-sorting', class: DragSortingUI},
+  {name: 'Drag All Target', query: 'drag-all-target', class: DragAllTargetUI },
+  {name: 'Drag Option: Inexhaustible', query: 'drag-option-inexhaustible', class: DragOptionInexhaustibleUI },
+  {name: 'Drag Option: Single Use', query: 'drag-option-single', class: DragOptionSingleUI },
   {name: 'Nowhere', query: 'blank', class: BlankUI},
 ];
 export class Navbar extends PIXI.Container {

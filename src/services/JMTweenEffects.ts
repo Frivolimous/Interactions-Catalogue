@@ -19,6 +19,12 @@ export class JMTweenEffect {
         return tween;
     }
 
+    public static Reappear(object: PIXI.Container) {
+        let tween = new JMTween(object.scale, 300).to({x: 1, y: 1}).easing(JMEasing.Back.Out).start();
+
+        return tween;
+    }
+
     public static ZipTo(object: PIXI.Container, target: PIXI.Point) {
         new JMTween(object, 300).to({x: target.x, y: target.y}).easing(JMEasing.Back.GentleOut).start();
         new JMTween(object.scale, 100).to({x: 0.9, y: 0.9}).easing(JMEasing.Quadratic.Out).start()

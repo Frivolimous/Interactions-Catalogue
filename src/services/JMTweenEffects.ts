@@ -33,4 +33,23 @@ export class JMTweenEffect {
             new JMTween(object.scale, 200).wait(delay).to({x: 1, y: 1}).easing(JMEasing.Back.Out).start();
         });
     }
+
+    public static InfiniteWiggle(object: PIXI.Container) {
+        let tween = new JMTween(object, 200).to({rotation: Math.PI / 6}).start().onComplete(() => {
+            tween.reverse();
+            tween.reset();
+            tween.start();
+        });
+
+        return tween;
+    }
+
+    public static ShakeNo(object: PIXI.Container, offset: number = 10, duration = 800) {
+        let x = object.x;
+        let tween = new JMTween(object, duration / 4).to({x: x + offset}).start();
+        tween.chain(object, duration / 4).to({x: x - offset}).yoyo(true, 1)
+            .chain(object, duration / 4).to({x});
+
+        return tween;
+    }
 }

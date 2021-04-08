@@ -9,7 +9,7 @@ import { TextureCache } from './services/TextureCache';
 import { GameEvents, IResizeEvent } from './services/GameEvents';
 import { BaseUI, IFadeTiming, dFadeTiming } from './pages/_BaseUI';
 import { ScreenCover } from './JMGE/effects/ScreenCover';
-import { Navbar } from './pages/_Navbar';
+import { Navbar, UIReferences } from './pages/_Navbar';
 import { TextureData } from './data/TextureData';
 import { FontLoader } from './services/FontLoader';
 import { DragTargetUI } from './pages/DragTargetUI';
@@ -102,12 +102,13 @@ export let Facade = new class FacadeInner {
     console.log('INITIALIZE: Ready');
 
     let startingPage = this.queryURLParameter('page');
-    switch (startingPage) {
-      case 'drag-target': this.currentPage = new DragTargetUI(); break;
-      case 'blank': this.currentPage = new BlankUI(); break;
-      case 'test': this.currentPage = new TestUI(); break;
-      default: this.currentPage = new MenuUI(); break;
+    let ref = _.find(UIReferences, {query: startingPage});
+    if (ref) {
+      this.currentPage = new ref.class();
+    } else {
+      this.currentPage = new MenuUI();
     }
+
     this.screen.addChild(this.currentPage);
     this.currentPage.navIn();
 

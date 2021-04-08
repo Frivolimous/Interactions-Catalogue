@@ -8,7 +8,15 @@ import { Facade } from '../index';
 import { BlankUI } from './BlankUI';
 import { TestUI } from './TestUI';
 import { DragTargetUI } from './DragTargetUI';
+import { DragSortingUI } from './DragSortingUI';
 
+export const UIReferences: {name: string, query: string, class: any}[] = [
+  {name: 'Main Menu', query: 'menu', class: MenuUI},
+  {name: 'Testing', query: 'test', class: TestUI},
+  {name: 'Drag Target', query: 'drag-target', class: DragTargetUI},
+  {name: 'Drag Sorting', query: 'drag-sorting', class: DragSortingUI},
+  {name: 'Nowhere', query: 'blank', class: BlankUI},
+];
 export class Navbar extends PIXI.Container {
   private background = new PIXI.Graphics();
   private contents: PIXI.Container[] = [];
@@ -17,10 +25,9 @@ export class Navbar extends PIXI.Container {
     super();
     GameEvents.WINDOW_RESIZE.addListener(this.onResize);
     this.addChild(this.background);
-    this.addContent('Main Menu', MenuUI);
-    this.addContent('Testing Stuff', TestUI);
-    this.addContent('Drag Target', DragTargetUI);
-    this.addContent('Nowhere', BlankUI, true);
+    UIReferences.forEach(ref => {
+      this.addContent(ref.name, ref.class);
+    });
   }
 
   private addContent(title: string, PageConstructor: typeof BaseUI, nowhere: boolean = null) {

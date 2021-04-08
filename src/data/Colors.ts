@@ -11,4 +11,12 @@ export const Colors = {
     0xFF00FF,
     0xFF9900,
   ],
+
+  TARGETS: [
+    0xF4CCCC,
+    0xD9EAD3,
+    0xC9DAF8,
+    0xEAD1DC,
+    0xFCE5CD,
+  ],
 };

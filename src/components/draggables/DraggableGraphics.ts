@@ -19,11 +19,13 @@ export class DraggableGraphics extends PIXI.Container {
 
     private dragOffset: PIXI.Point;
     private targetPosition: PIXI.Point;
-    private overTarget = false;
+    private overTarget: DraggableTarget | false = false;
     private moveRatio = 0.1;
     private startingPosition: PIXI.Point;
 
     private target: DraggableTarget;
+
+    private incorrect: DraggableTarget[] = [];
 
     private hoverTween: JMTween;
 
@@ -71,6 +73,10 @@ export class DraggableGraphics extends PIXI.Container {
         this.target = target;
     }
 
+    public addIncorrectTarget(target: DraggableTarget) {
+        this.incorrect.push(target);
+    }
+
     public animateAppear() {
         this.scale.set(0, 0);
         return new JMTween(this.scale, 300).to({x: 1, y: 1}).easing(JMEasing.Back.Out).start();
@@ -93,10 +99,13 @@ export class DraggableGraphics extends PIXI.Container {
         this.targetPosition = null;
         this.offsetDot.visible = false;
 
-        if (this.overTarget) {
+        if (this.overTarget === this.target) {
             this.endHoverEffect();
             this.interactive = false;
             this.interactionCompleteEffect();
+        } else if (this.overTarget) {
+            this.endHoverIncorrect(this.overTarget);
+            this.interactionIncorrectEffect(this.overTarget);
         } else {
             this.endDragEffect();
         }
@@ -119,21 +128,35 @@ export class DraggableGraphics extends PIXI.Container {
             this.y = this.y + (this.targetPosition.y - this.y) * this.moveRatio;
 
             if (this.target) {
-                if (this.isOverTarget()) {
-                    if (!this.overTarget) {
+                if (this.isOverTarget(this.target)) {
+                    if (this.overTarget !== this.target) {
                         this.onOverTarget();
                     }
                 } else {
-                    if (this.overTarget) {
+                    if (this.overTarget === this.target) {
                         this.onOffTarget();
                     }
+
+                    this.incorrect.forEach(target => {
+                        if (this.isOverTarget(target)) {
+                            if (!this.overTarget) {
+                                this.overTarget = target;
+                                this.startHoverIncorrect(target);
+                            }
+                        } else {
+                            if (this.overTarget === target) {
+                                this.overTarget = null;
+                                this.endHoverIncorrect(target);
+                            }
+                        }
+                    });
                 }
             }
         }
     }
 
-    private isOverTarget = () => {
-        let bounds = this.target.getHitBox();
+    private isOverTarget = (target: DraggableTarget) => {
+        let bounds = target.getHitBox();
         if (this.dragOffset) {
             let x = this.x - this.dragOffset.x;
             let y = this.y - this.dragOffset.y;
@@ -141,12 +164,12 @@ export class DraggableGraphics extends PIXI.Container {
                 return true;
             }
         }
-        // this.targetPosition.x = position.x + this.dragOffset.x;
+
         return (this.x > bounds.left && this.y > bounds.top && this.x < bounds.right && this.y < bounds.bottom);
     }
 
     private onOverTarget = () => {
-        this.overTarget = true;
+        this.overTarget = this.target;
         this.onHoverStart && this.onHoverStart();
         this.startHoverEffect();
     }
@@ -173,12 +196,27 @@ export class DraggableGraphics extends PIXI.Container {
 
     private startHoverEffect() {
         new JMTween(this.graphic.scale, 100).to({x: 1.3, y: 1.3}).start();
-        this.hoverTween = new JMTween(this.graphic, 200).to({rotation: Math.PI / 6}).start().onComplete(() => {
-            this.hoverTween.reverse();
-            this.hoverTween.reset();
-            this.hoverTween.start();
-        });
+        if (!this.hoverTween) {
+            this.hoverTween = JMTweenEffect.InfiniteWiggle(this.graphic);
+        }
+
         this.target && this.target.startHoverEffect();
+    }
+
+    private startHoverIncorrect(target: DraggableTarget) {
+        new JMTween(this.graphic.scale, 100).to({x: 1.1, y: 1.1}).start();
+        if (!this.hoverTween) {
+            this.hoverTween = JMTweenEffect.InfiniteWiggle(this.graphic);
+        }
+    }
+
+    private endHoverIncorrect(target: DraggableTarget) {
+        new JMTween(this.graphic.scale, 100).to({x: 1.1, y: 1.1}).start();
+        if (this.hoverTween) {
+            this.hoverTween.stop();
+            new JMTween(this.graphic, 100).to({rotation: 0}).start();
+            this.hoverTween = null;
+        }
     }
 
     private endHoverEffect() {
@@ -197,5 +235,15 @@ export class DraggableGraphics extends PIXI.Container {
             Firework.makeExplosion(this.parent, {x: this.x, y: this.y, count: 70, mag_min: 2, fade: 0.06, tint: Colors.OPTIONS[0]});
             this.destroy();
         });
+    }
+
+    private interactionIncorrectEffect(target: DraggableTarget) {
+        this.hitbox.interactive = false;
+        new JMTween(this, 0).wait(1000).start().onComplete(() => {
+            this.hitbox.interactive = true;
+            this.endDragEffect();
+        });
+        this.overTarget = null;
+        target.incorrectEffect();
     }
 }

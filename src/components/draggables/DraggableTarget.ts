@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js';
 import { CONFIG } from '../../Config';
 import { Colors } from '../../data/Colors';
 import { JMEasing, JMTween } from '../../JMGE/JMTween';
+import { JMTweenEffect } from '../../services/JMTweenEffects';
 
 export class DraggableTarget extends PIXI.Container {
     public graphic: PIXI.Graphics = new PIXI.Graphics();
@@ -54,5 +55,12 @@ export class DraggableTarget extends PIXI.Container {
 
             new JMTween(this.graphic.scale, 300).to({x: 1, y: 1}).easing(JMEasing.Quadratic.Out).start();
         }
+    }
+
+    public incorrectEffect = () => {
+        new JMTween(this.graphic, 100).colorTo({tint: 0x777777}).start()
+            .chain(this.graphic, 100).colorTo({tint: 0xffffff}).wait(1400);
+
+        JMTweenEffect.ShakeNo(this.graphic, 10, 800).wait(300);
     }
 }

@@ -39,11 +39,6 @@ export class DragAllTargetUI extends BaseUI {
       draggable.setTarget(this.target);
     });
 
-    this.draggables[0].setStartingPosition(150, 300);
-    this.draggables[1].setStartingPosition(400, 200);
-    this.draggables[2].setStartingPosition(650, 300);
-    this.target.position.set(400, 600);
-
     this.resetIdleHintTimer();
   }
   public navIn = () => {
@@ -56,8 +51,13 @@ export class DragAllTargetUI extends BaseUI {
 
   public positionElements = (e: IResizeEvent) => {
     this.title.x = (e.innerBounds.width - this.title.width) / 2;
-    this.title.y = 50;
+    this.title.y = 20;
     this.restartButton.position.set(e.innerBounds.right - 100, e.innerBounds.top + 30);
+
+    this.draggables[0].setStartingPosition(e.innerBounds.width / 4, e.innerBounds.height / 3);
+    this.draggables[1].setStartingPosition(e.innerBounds.width / 2, e.innerBounds.height / 4);
+    this.draggables[2].setStartingPosition(e.innerBounds.width * 3 / 4, e.innerBounds.height / 3);
+    this.target.position.set(e.innerBounds.width / 2, e.innerBounds.height * 3 / 4);
   }
 
   private resetScene = () => {

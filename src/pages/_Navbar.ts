@@ -75,7 +75,7 @@ export class Navbar extends PIXI.Container {
   }
 
   private addContent(config: INavConfig) {
-    let content = new PIXI.Text(config.name, {fontFamily: Fonts.UI, fill: config.red ? 0xff7777 : config.red === false ? 0xaaaa77 : 0xffffff, fontSize: 20});
+    let content = new PIXI.Text(config.name, {fontFamily: Fonts.UI, fill: config.red ? 0xff7777 : config.red === false ? 0xaaaa77 : 0xffffff, fontSize: 10});
     this.addChild(content);
     this.contents.push(content);
     content.interactive = true;
@@ -104,9 +104,9 @@ export class Navbar extends PIXI.Container {
     this.background.clear().beginFill(0x333333, 0.8).drawShape(bounds);
     this.position.set(e.outerBounds.x, e.outerBounds.y);
 
-    let top = 20;
-    let left = 20;
-    let inc = 30;
+    let top = 10;
+    let left = 10;
+    let inc = 15;
 
     for (let i = 0; i < this.contents.length; i++) {
       this.contents[i].position.set(left, top + i * inc);

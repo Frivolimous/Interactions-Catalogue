@@ -35,9 +35,6 @@ export class DragHoverUI extends BaseUI {
 
     this.draggable.setTarget(this.target);
 
-    this.draggable.position.set(150, 400);
-    this.target.position.set(600, 400);
-
     this.target.onProgressComplete = () => {
       this.draggable.removeTarget();
       this.pauseHintTimer();
@@ -57,10 +54,13 @@ export class DragHoverUI extends BaseUI {
 
   public positionElements = (e: IResizeEvent) => {
     this.title.x = (e.innerBounds.width - this.title.width) / 2;
-    this.title.y = 50;
+    this.title.y = 20;
     this.restartButton.position.set(e.innerBounds.right - 100, e.innerBounds.top + 30);
 
     if (this.draggable) this.draggable.outerBounds = e.innerBounds;
+
+    this.draggable.position.set(e.innerBounds.width / 4, e.innerBounds.height / 2);
+    this.target.position.set(e.innerBounds.width * 3 / 4, e.innerBounds.height / 2);
   }
 
   private resetScene = () => {

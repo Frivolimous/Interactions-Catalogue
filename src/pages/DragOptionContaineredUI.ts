@@ -29,7 +29,7 @@ export class DragOptionContaineredUI extends BaseUI {
     this.restartButton = new Button({label: 'Restart', onClick: this.resetScene, width: 50, height: 30});
     this.addChild(this.title, this.restartButton);
 
-    this.target = new DraggableTarget('square', 200, Colors.TARGET);
+    this.target = new DraggableTarget('square', 150, Colors.TARGET);
     this.addChild(this.target);
     this.containerStack = new HorizontalStack(new PIXI.Point(0, 0), 150);
     this.horizontalStack = new HorizontalStack(new PIXI.Point(0, 0), 150);
@@ -43,9 +43,9 @@ export class DragOptionContaineredUI extends BaseUI {
       this.containerStack.addObject(container);
     });
 
-    this.draggables.push(new DraggableGraphicsContained('circle', 20, Colors.OPTIONS[0], this.background));
-    this.draggables.push(new DraggableGraphicsContained('circle', 20, Colors.OPTIONS[3], this.background));
-    this.draggables.push(new DraggableGraphicsContained('circle', 20, Colors.OPTIONS[2], this.background));
+    this.draggables.push(new DraggableGraphicsContained('circle', 15, Colors.OPTIONS[0], this.background));
+    this.draggables.push(new DraggableGraphicsContained('circle', 15, Colors.OPTIONS[3], this.background));
+    this.draggables.push(new DraggableGraphicsContained('circle', 15, Colors.OPTIONS[2], this.background));
     this.draggables.forEach(draggable => {
       draggable.onInteractionStart = this.resetMovingHintTimer;
       draggable.onInteractionEnd = this.resetIdleHintTimer;
@@ -56,12 +56,6 @@ export class DragOptionContaineredUI extends BaseUI {
       draggable.setTarget(this.target);
       this.horizontalStack.addObject(draggable);
     });
-
-    this.horizontalStack.positon.set(400, 700);
-    this.horizontalStack.reposition(true, true);
-    this.containerStack.positon.set(400, 700);
-    this.containerStack.reposition(true, true);
-    this.target.position.set(400, 300);
 
     this.resetIdleHintTimer();
   }
@@ -76,8 +70,16 @@ export class DragOptionContaineredUI extends BaseUI {
 
   public positionElements = (e: IResizeEvent) => {
     this.title.x = (e.innerBounds.width - this.title.width) / 2;
-    this.title.y = 50;
+    this.title.y = 20;
     this.restartButton.position.set(e.innerBounds.right - 100, e.innerBounds.top + 30);
+
+    this.horizontalStack.positon.set(e.innerBounds.width / 2, e.innerBounds.height * 5 / 6);
+    this.horizontalStack.padding = e.innerBounds.width / 6;
+    this.horizontalStack.reposition(true, true);
+    this.containerStack.positon.set(e.innerBounds.width / 2, e.innerBounds.height * 5 / 6);
+    this.containerStack.padding = e.innerBounds.width / 6;
+    this.containerStack.reposition(true, true);
+    this.target.position.set(e.innerBounds.width / 2, e.innerBounds.height / 2.5);
   }
 
   private resetScene = () => {

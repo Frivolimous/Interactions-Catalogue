@@ -1,9 +1,9 @@
 export const CONFIG = {
   INIT: {
     SCREEN_WIDTH: 800,
-    SCREEN_HEIGHT: 800,
+    SCREEN_HEIGHT: 400,
     STAGE_BUFFER: 80,
-    RESOLUTION: 1,
+    RESOLUTION: 4,
     MOUSE_HOLD: 200,
     FPS: 60,
     BORDER: false,
@@ -12,6 +12,6 @@ export const CONFIG = {
   },
   STAGE: {
     SCREEN_WIDTH: 800,
-    SCREEN_HEIGHT: 800,
+    SCREEN_HEIGHT: 400,
   },
 };

@@ -27,10 +27,8 @@ export class DragFollowUI extends BaseUI {
     this.draggable.returnMode = 'drift';
 
     this.addChild(this.draggable);
-    this.draggable.setStartingPosition(400, 400);
-    // this.draggable.position.set(400, 400);
-
   }
+
   public navIn = () => {
     this.draggable.animateAppear().wait(300);
   }
@@ -41,6 +39,9 @@ export class DragFollowUI extends BaseUI {
     this.restartButton.position.set(e.innerBounds.right - 100, e.innerBounds.top + 30);
 
     if (this.draggable) this.draggable.outerBounds = e.innerBounds;
+
+    this.draggable.setStartingPosition(e.innerBounds.width / 2, e.innerBounds.height / 2);
+    // this.draggable.position.set(e.innerBounds.width / 2, e.innerBounds.height / 2);
   }
 
   private resetScene = () => {

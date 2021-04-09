@@ -41,11 +41,6 @@ export class DragSortingUI extends BaseUI {
     this.draggable.addIncorrectTarget(this.targets[0]);
     this.draggable.addIncorrectTarget(this.targets[2]);
 
-    this.draggable.setStartingPosition(400, 200);
-    this.targets[0].position.set(200, 600);
-    this.targets[1].position.set(400, 600);
-    this.targets[2].position.set(600, 600);
-
     this.resetIdleHintTimer();
   }
   public navIn = () => {
@@ -58,8 +53,13 @@ export class DragSortingUI extends BaseUI {
 
   public positionElements = (e: IResizeEvent) => {
     this.title.x = (e.innerBounds.width - this.title.width) / 2;
-    this.title.y = 50;
+    this.title.y = 20;
     this.restartButton.position.set(e.innerBounds.right - 100, e.innerBounds.top + 30);
+
+    this.draggable.setStartingPosition(e.innerBounds.width / 2, e.innerBounds.height / 3);
+    this.targets[0].position.set(e.innerBounds.width / 4, e.innerBounds.height * 3 / 4);
+    this.targets[1].position.set(e.innerBounds.width / 2, e.innerBounds.height * 3 / 4);
+    this.targets[2].position.set(e.innerBounds.width * 3 / 4, e.innerBounds.height * 3 / 4);
   }
 
   private resetScene = () => {

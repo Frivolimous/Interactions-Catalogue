@@ -18,11 +18,10 @@ export class TestUI extends BaseUI {
     super({bgColor: Colors.BACKGROUND});
 
     AssetLoader.getBody('sheep', data => {
-      console.log("GOT THE DATA");
       let dragon = new DragonSpriteBasic(data);
       this.addChild(dragon.display);
       dragon.display.scale.set(0.5);
-      dragon.display.position.set(500, 500);
+      dragon.display.position.set(600, 300);
       dragon.display.interactive = true;
       dragon.display.buttonMode = true;
       dragon.display.addListener('pointerdown', () => {
@@ -36,8 +35,8 @@ export class TestUI extends BaseUI {
     let icon = new PIXI.Graphics();
     this.addChild(iconb, icon);
     iconb.beginFill(0x00ff00).lineStyle(2).drawCircle(width / 2, width / 2, width / 2);
-    iconb.position.set(200, 200);
-    icon.position.set(200, 200);
+    iconb.position.set(200, 100);
+    icon.position.set(200, 100);
     iconb.interactive = true;
     iconb.buttonMode = true;
     iconb.addListener('pointerdown', e => {

@@ -8,7 +8,7 @@ type Stackable = DraggableGraphics | DraggableTarget | BasicGraphics;
 export class HorizontalStack {
     private objects: Stackable[] = [];
 
-    constructor(public positon: PIXI.Point, private padding: number) {}
+    constructor(public positon: PIXI.Point, public padding: number) {}
 
     public addObject(object: Stackable) {
         this.objects.push(object);

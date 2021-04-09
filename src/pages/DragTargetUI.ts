@@ -34,9 +34,6 @@ export class DragTargetUI extends BaseUI {
 
     this.draggable.setTarget(this.target);
 
-    this.draggable.setStartingPosition(150, 400);
-    this.target.position.set(600, 400);
-
     this.resetIdleHintTimer();
   }
   public navIn = () => {
@@ -47,8 +44,11 @@ export class DragTargetUI extends BaseUI {
 
   public positionElements = (e: IResizeEvent) => {
     this.title.x = (e.innerBounds.width - this.title.width) / 2;
-    this.title.y = 50;
+    this.title.y = 20;
     this.restartButton.position.set(e.innerBounds.right - 100, e.innerBounds.top + 30);
+
+    this.draggable.setStartingPosition(e.innerBounds.width / 4, e.innerBounds.height / 2);
+    this.target.position.set(e.innerBounds.width * 3 / 4, e.innerBounds.height / 2);
   }
 
   private resetScene = () => {

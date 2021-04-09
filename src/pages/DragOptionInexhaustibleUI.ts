@@ -23,7 +23,7 @@ export class DragOptionInexhaustibleUI extends BaseUI {
     this.restartButton = new Button({label: 'Restart', onClick: this.resetScene, width: 50, height: 30});
     this.addChild(this.title, this.restartButton);
 
-    this.target = new DraggableTarget('square', 200, Colors.TARGET);
+    this.target = new DraggableTarget('square', 150, Colors.TARGET);
     this.addChild(this.target);
 
     this.draggables.push(new DraggableGraphicsInexhaustible('square', 70, Colors.OPTIONS[0], this.background));
@@ -39,11 +39,6 @@ export class DragOptionInexhaustibleUI extends BaseUI {
       draggable.setTarget(this.target);
     });
 
-    this.draggables[0].setStartingPosition(250, 700);
-    this.draggables[1].setStartingPosition(400, 700);
-    this.draggables[2].setStartingPosition(550, 700);
-    this.target.position.set(400, 300);
-
     this.resetIdleHintTimer();
   }
   public navIn = () => {
@@ -56,8 +51,13 @@ export class DragOptionInexhaustibleUI extends BaseUI {
 
   public positionElements = (e: IResizeEvent) => {
     this.title.x = (e.innerBounds.width - this.title.width) / 2;
-    this.title.y = 50;
+    this.title.y = 20;
     this.restartButton.position.set(e.innerBounds.right - 100, e.innerBounds.top + 30);
+
+    this.draggables[0].setStartingPosition(e.innerBounds.width / 2 - e.innerBounds.width / 6, e.innerBounds.height * 5 / 6);
+    this.draggables[1].setStartingPosition(e.innerBounds.width / 2, e.innerBounds.height * 5 / 6);
+    this.draggables[2].setStartingPosition(e.innerBounds.width / 2 + e.innerBounds.width / 6, e.innerBounds.height * 5 / 6);
+    this.target.position.set(e.innerBounds.width / 2, e.innerBounds.height / 2.5);
   }
 
   private resetScene = () => {

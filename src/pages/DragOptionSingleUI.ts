@@ -26,7 +26,7 @@ export class DragOptionSingleUI extends BaseUI {
     this.restartButton = new Button({label: 'Restart', onClick: this.resetScene, width: 50, height: 30});
     this.addChild(this.title, this.restartButton);
 
-    this.target = new DraggableTarget('square', 200, Colors.TARGET);
+    this.target = new DraggableTarget('square', 150, Colors.TARGET);
     this.addChild(this.target);
     this.horizontalStack = new HorizontalStack(new PIXI.Point(0, 0), 150);
 
@@ -45,10 +45,6 @@ export class DragOptionSingleUI extends BaseUI {
       this.horizontalStack.addObject(draggable);
     });
 
-    this.horizontalStack.positon.set(400, 700);
-    this.horizontalStack.reposition(true, true);
-    this.target.position.set(400, 300);
-
     this.resetIdleHintTimer();
   }
 
@@ -62,8 +58,13 @@ export class DragOptionSingleUI extends BaseUI {
 
   public positionElements = (e: IResizeEvent) => {
     this.title.x = (e.innerBounds.width - this.title.width) / 2;
-    this.title.y = 50;
+    this.title.y = 20;
     this.restartButton.position.set(e.innerBounds.right - 100, e.innerBounds.top + 30);
+
+    this.horizontalStack.positon.set(e.innerBounds.width / 2, e.innerBounds.height * 5 / 6);
+    this.horizontalStack.padding = e.innerBounds.width / 6;
+    this.horizontalStack.reposition(true, true);
+    this.target.position.set(e.innerBounds.width / 2, e.innerBounds.height / 2.5);
   }
 
   private resetScene = () => {

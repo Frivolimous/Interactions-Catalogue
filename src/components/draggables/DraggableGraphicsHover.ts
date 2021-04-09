@@ -11,7 +11,7 @@ import { DraggableTargetProgressive } from './DraggableTargetProgressive';
 
 export class DraggableGraphicsHover extends DraggableGraphics {
 
-    // constructor(shape: 'square' | 'circle', size: number, protected color: number, protected canvas: PIXI.Container) {
+    // constructor(shape: 'square' | 'circle', size: number, public color: number, public canvas: PIXI.Container) {
     //     super(shape, size, color, canvas);
     // }
 
@@ -21,7 +21,7 @@ export class DraggableGraphicsHover extends DraggableGraphics {
         this.interactionCompleteEffect();
     }
 
-    protected endDrag = (e: PIXI.interaction.InteractionEvent) => {
+    public endDrag = (e: PIXI.interaction.InteractionEvent) => {
         this.dragOffset = null;
         this.offsetDot.visible = false;
 
@@ -30,7 +30,7 @@ export class DraggableGraphicsHover extends DraggableGraphics {
         this.onInteractionEnd && this.onInteractionEnd();
     }
 
-    protected startHoverEffect() {
+    public startHoverEffect() {
         new JMTween(this.graphic, 200).to({rotation: Math.PI / 6}).easing(JMEasing.Quadratic.Out).start();
         new JMTween(this.graphic.scale, 100).to({x: 1.2, y: 1.2}).start();
         // if (!this.hoverTween) {
@@ -40,7 +40,7 @@ export class DraggableGraphicsHover extends DraggableGraphics {
         this.target && this.target.startHoverEffect();
     }
 
-    protected endHoverEffect() {
+    public endHoverEffect() {
         new JMTween(this.graphic.scale, 100).to({x: 1.1, y: 1.1}).start();
 
         new JMTween(this.graphic, 200).to({rotation: 0}).easing(JMEasing.Quadratic.Out).start();

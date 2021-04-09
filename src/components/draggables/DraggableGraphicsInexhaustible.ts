@@ -5,13 +5,13 @@ import { JMTweenEffect } from '../../services/JMTweenEffects';
 import { DraggableGraphics } from './DraggableGraphics';
 
 export class DraggableGraphicsInexhaustible extends DraggableGraphics {
-    constructor(shape: 'square' | 'circle', size: number, protected color: number, protected canvas: PIXI.Container) {
+    constructor(shape: 'square' | 'circle', size: number, public color: number, public canvas: PIXI.Container) {
         super(shape, size, color, canvas);
 
         this.returnMode = 'respawn';
     }
 
-    protected interactionCompleteEffect() {
+    public interactionCompleteEffect() {
         this.targetPosition = null;
 
         this.hitbox.interactive = false;

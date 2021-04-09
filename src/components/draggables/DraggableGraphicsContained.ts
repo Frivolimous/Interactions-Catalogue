@@ -10,13 +10,13 @@ import { DraggableTarget } from './DraggableTarget';
 
 export class DraggableGraphicsContained extends DraggableGraphics {
 
-    constructor(shape: 'square' | 'circle', size: number, protected color: number, protected canvas: PIXI.Container) {
+    constructor(shape: 'square' | 'circle', size: number, public color: number, public canvas: PIXI.Container) {
         super(shape, size, color, canvas);
 
         this.graphic.scale.set(0);
 
     }
-    protected interactionCompleteEffect() {
+    public interactionCompleteEffect() {
         this.targetPosition = null;
 
         this.hitbox.interactive = false;
@@ -27,12 +27,11 @@ export class DraggableGraphicsContained extends DraggableGraphics {
                 this.position.set(this.startingPosition.x, this.startingPosition.y);
                 this.vX = 0;
                 this.vY = 0;
-        
             }
         });
     }
 
-    protected endDragEffect() {
+    public endDragEffect() {
         this.targetPosition = null;
 
         new JMTween(this.graphic.scale, 200).to({x: 0, y: 0}).start().onComplete(() => {
@@ -40,7 +39,6 @@ export class DraggableGraphicsContained extends DraggableGraphics {
                 this.position.set(this.startingPosition.x, this.startingPosition.y);
                 this.vX = 0;
                 this.vY = 0;
-        
             }
         });
     }

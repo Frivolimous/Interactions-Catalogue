@@ -43,10 +43,10 @@ export let Facade = new class FacadeInner {
 
     let border = this.queryURLParameter('border');
     let navbar = this.queryURLParameter('navbar');
-    if (border && border === 'TRUE') {
+    if (border && border.toLowerCase() === 'true') {
       CONFIG.INIT.BORDER = true;
     }
-    if (navbar && navbar === 'TRUE') {
+    if (navbar && navbar.toLowerCase() === 'true') {
       CONFIG.INIT.NAVBAR = true;
     }
 
@@ -93,7 +93,8 @@ export let Facade = new class FacadeInner {
     // load fonts then preloader!
     // GameEvents.APP_LOG.publish({type: 'INITIALIZE', text: 'Primary Setup'});
     console.log('INITIALIZE: Setup');
-    window.requestAnimationFrame(() => FontLoader.load(fonts).then(this.init));
+    window.requestAnimationFrame(() => this.init());
+    // window.requestAnimationFrame(() => FontLoader.load(fonts).then(this.init));
   }
 
   public init = () => {

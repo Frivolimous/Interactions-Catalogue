@@ -16,10 +16,20 @@ import { DragOptionContaineredUI } from './DragOptionContaineredUI';
 import { DragHoverUI } from './DragHoverUI';
 import { DragScrubUI } from './DragScrubUI';
 import { DragFollowUI } from './DragFollowUI';
+import { DragMultipleReuseUI } from './DragMultipleReuseUI';
+import { CONFIG } from '../Config';
 
-export const UIReferences: {name: string, query: string, class: any}[] = [
-  {name: 'Main Menu', query: 'menu', class: MenuUI},
-  {name: 'Testing', query: 'test', class: TestUI},
+export interface INavConfig {
+  name: string;
+  query: string;
+  class: any;
+  red?: boolean;
+  hidden?: boolean;
+}
+
+export const UIReferences: INavConfig[] = [
+  {name: 'Main Menu', query: 'menu', class: MenuUI, red: true},
+  {name: 'Testing', query: 'test', class: TestUI, red: true},
   {name: 'Drag Target', query: 'drag-target', class: DragTargetUI},
   {name: 'Drag Sorting', query: 'drag-sorting', class: DragSortingUI},
   {name: 'Drag All Target', query: 'drag-all-target', class: DragAllTargetUI },
@@ -29,7 +39,7 @@ export const UIReferences: {name: string, query: string, class: any}[] = [
   {name: 'Drag Hover', query: 'drag-hover', class: DragHoverUI },
   {name: 'Drag Scrub', query: 'drag-scrub', class: DragScrubUI },
   {name: 'Drag Follow', query: 'drag-follow', class: DragFollowUI },
-  // {name: 'Drag Multiple Reuse', query: 'drag-multiple-reuse', class: DragMultipleReuseUI },
+  {name: 'Drag Multiple Reuse', query: 'drag-multiple-reuse', class: DragMultipleReuseUI, hidden: true },
   // {name: 'Drag Clothing', query: 'drag-clothing', class: DragClothingUI },
   // {name: 'Drag Slider', query: 'drag-slider', class: DragSliderUI },
   // {name: 'Drag Puzzle', query: 'drag-puzzle', class: DragPuzzleUI },
@@ -47,7 +57,7 @@ export const UIReferences: {name: string, query: string, class: any}[] = [
   // {name: 'UI Select Option', query: 'ui-select-option', class: UISelectOptionUI },
   // {name: '', query: '', class: },
   // {name: '', query: '', class: },
-  {name: 'Nowhere', query: 'blank', class: BlankUI},
+  {name: 'Nowhere', query: 'blank', class: BlankUI, red: true},
 ];
 export class Navbar extends PIXI.Container {
   private background = new PIXI.Graphics();
@@ -58,23 +68,32 @@ export class Navbar extends PIXI.Container {
     GameEvents.WINDOW_RESIZE.addListener(this.onResize);
     this.addChild(this.background);
     UIReferences.forEach(ref => {
-      this.addContent(ref.name, ref.class);
+      if (!ref.hidden) {
+        this.addContent(ref);
+      }
     });
   }
 
-  private addContent(title: string, PageConstructor: typeof BaseUI, nowhere: boolean = null) {
-    let content = new PIXI.Text(title, {fontFamily: Fonts.UI, fill: nowhere ? 0xff7777 : nowhere === false ? 0xaaaa77 : 0xffffff, fontSize: 20});
+  private addContent(config: INavConfig) {
+    let content = new PIXI.Text(config.name, {fontFamily: Fonts.UI, fill: config.red ? 0xff7777 : config.red === false ? 0xaaaa77 : 0xffffff, fontSize: 20});
     this.addChild(content);
     this.contents.push(content);
     content.interactive = true;
     content.buttonMode = true;
 
     content.addListener('pointerdown', () => {
-      let page = new PageConstructor();
+      let page = new config.class();
       Facade.setCurrentPage(page, null, true);
+      let url = window.location.href;
+      let queryLoc = url.indexOf('?');
+      if (queryLoc > 0) {
+        url = url.substr(0, queryLoc);
+      }
+      let newUrl = url + `?page=${config.query}&navbar=${CONFIG.INIT.NAVBAR}&border=${CONFIG.INIT.BORDER}`;
+      window.history.replaceState({page: config.query, navbar: CONFIG.INIT.NAVBAR, border: CONFIG.INIT.BORDER}, config.name, newUrl);
     });
 
-    if (nowhere === null) {
+    if (config.red === null) {
       content.addListener('pointerover', () => content.tint = 0x00ffff);
       content.addListener('pointerout', () => content.tint = 0xffffff);
     }

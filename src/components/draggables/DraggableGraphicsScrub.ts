@@ -14,7 +14,7 @@ export class DraggableGraphicsScrub extends DraggableGraphics {
 
     private previousPosition: PIXI.Point = new PIXI.Point();
 
-    constructor(shape: 'square' | 'circle', size: number, protected color: number, protected canvas: PIXI.Container) {
+    constructor(shape: 'square' | 'circle', size: number, public color: number, public canvas: PIXI.Container) {
         super(shape, size, color, canvas);
 
         this.moveMode = 'instant';
@@ -26,7 +26,7 @@ export class DraggableGraphicsScrub extends DraggableGraphics {
         this.interactionCompleteEffect();
     }
 
-    protected endDrag = (e: PIXI.interaction.InteractionEvent) => {
+    public endDrag = (e: PIXI.interaction.InteractionEvent) => {
         this.dragOffset = null;
         this.offsetDot.visible = false;
         this.overTarget = false;
@@ -36,39 +36,30 @@ export class DraggableGraphicsScrub extends DraggableGraphics {
         this.onInteractionEnd && this.onInteractionEnd();
     }
 
-    protected onTick = () => {
-        if (!this.exists) return;
-
-        if (this.targetPosition) {
-            this.previousPosition.set(this.x, this.y);
-
-            this.x = this.targetPosition.x;
-            this.y = this.targetPosition.y;
-
-            if (this.target) {
-                if (this.isOverTarget(this.target)) {
-                    if (this.overTarget !== this.target) {
-                        this.onOverTarget();
-                    } else {
-                        let dX = this.x - this.previousPosition.x;
-                        let dY = this.y - this.previousPosition.y;
-
-                        let distance = Math.sqrt(dX * dX + dY * dY);
-
-                        (this.target as DraggableTargetProgressive).progressBy(distance * this.scrubRatio);
-                    }
+    public targetCheck = () => {
+        if (this.target) {
+            if (this.isOverTarget(this.target)) {
+                if (this.overTarget !== this.target) {
+                    this.onOverTarget();
                 } else {
-                    if (this.overTarget === this.target) {
-                        this.onOffTarget();
-                    }
+                    let dX = this.x - this.previousPosition.x;
+                    let dY = this.y - this.previousPosition.y;
+
+                    let distance = Math.sqrt(dX * dX + dY * dY);
+
+                    (this.target as DraggableTargetProgressive).progressBy(distance * this.scrubRatio);
+                }
+            } else {
+                if (this.overTarget === this.target) {
+                    this.onOffTarget();
                 }
             }
         }
 
-        this.boundsCheck();
+        this.previousPosition.set(this.x, this.y);
     }
 
-    protected startHoverEffect() {
+    public startHoverEffect() {
         // new JMTween(this.graphic, 200).to({rotation: Math.PI / 6}).easing(JMEasing.Quadratic.Out).start();
         new JMTween(this.graphic.scale, 100).to({x: 1.2, y: 1.2}).start();
         // if (!this.hoverTween) {
@@ -78,7 +69,7 @@ export class DraggableGraphicsScrub extends DraggableGraphics {
         // this.target && this.target.startHoverEffect();
     }
 
-    protected endHoverEffect() {
+    public endHoverEffect() {
         new JMTween(this.graphic.scale, 100).to({x: 1.1, y: 1.1}).start();
 
         // new JMTween(this.graphic, 200).to({rotation: 0}).easing(JMEasing.Quadratic.Out).start();

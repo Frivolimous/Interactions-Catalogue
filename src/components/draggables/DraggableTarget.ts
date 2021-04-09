@@ -3,14 +3,18 @@ import { CONFIG } from '../../Config';
 import { Colors } from '../../data/Colors';
 import { JMEasing, JMTween } from '../../JMGE/JMTween';
 import { JMTweenEffect } from '../../services/JMTweenEffects';
+import { DraggableGraphics } from './DraggableGraphics';
 
 export class DraggableTarget extends PIXI.Container {
     public disabled = false;
 
     public graphic: PIXI.Graphics = new PIXI.Graphics();
-    protected hitbox: PIXI.Graphics = new PIXI.Graphics();
 
-    protected hoverTween: JMTween;
+    public contains: DraggableGraphics;
+
+    public hitbox: PIXI.Graphics = new PIXI.Graphics();
+
+    public hoverTween: JMTween;
 
     constructor(shape: 'square' | 'circle', size: number, color: number) {
         super();

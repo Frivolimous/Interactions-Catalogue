@@ -61,10 +61,17 @@ export class DraggableGraphics extends PIXI.Container {
         this.hitbox.drawRect(-hitsize / 2, -hitsize / 2, hitsize, hitsize);
 
         this.hitbox.addListener('pointerdown', this.startDrag);
-        this.hitbox.addListener('pointerup', this.endDrag);
-        this.hitbox.addListener('pointerupoutside', this.endDrag);
+        this.hitbox.addListener('pointerup', e => this.endDrag(e));
+        this.hitbox.addListener('pointerupoutside', e => this.endDrag(e));
         GameEvents.ticker.add(this.onTick);
         canvas.addListener('pointermove', this.moveDrag);
+    }
+
+    public destroy() {
+        super.destroy();
+
+        GameEvents.ticker.remove(this.onTick);
+        this.canvas.removeListener('pointermove', this.moveDrag);
     }
 
     public setStartingPosition(x: number, y: number, andUpdate = true) {
@@ -76,6 +83,13 @@ export class DraggableGraphics extends PIXI.Container {
 
     public setTarget(target: DraggableTarget) {
         this.target = target;
+    }
+
+    public removeTarget() {
+        if (this.isOverTarget(this.target)) {
+            this.onOffTarget();
+        }
+        this.target = null;
     }
 
     public addIncorrectTarget(target: DraggableTarget) {
@@ -128,6 +142,8 @@ export class DraggableGraphics extends PIXI.Container {
     }
 
     protected onTick = () => {
+        if (!this.exists) return;
+
         if (this.targetPosition) {
             this.x = this.x + (this.targetPosition.x - this.x) * this.moveRatio;
             this.y = this.y + (this.targetPosition.y - this.y) * this.moveRatio;
@@ -208,6 +224,17 @@ export class DraggableGraphics extends PIXI.Container {
         this.target && this.target.startHoverEffect();
     }
 
+    protected endHoverEffect() {
+        new JMTween(this.graphic.scale, 100).to({x: 1.1, y: 1.1}).start();
+        if (this.hoverTween) {
+            this.hoverTween.stop();
+            new JMTween(this.graphic, 100).to({rotation: 0}).start();
+            this.hoverTween = null;
+        }
+
+        this.target && this.target.endHoverEffect();
+    }
+
     protected startHoverIncorrect(target: DraggableTarget) {
         new JMTween(this.graphic.scale, 100).to({x: 1.1, y: 1.1}).start();
         if (!this.hoverTween) {
@@ -222,17 +249,6 @@ export class DraggableGraphics extends PIXI.Container {
             new JMTween(this.graphic, 100).to({rotation: 0}).start();
             this.hoverTween = null;
         }
-    }
-
-    protected endHoverEffect() {
-        new JMTween(this.graphic.scale, 100).to({x: 1.1, y: 1.1}).start();
-        if (this.hoverTween) {
-            this.hoverTween.stop();
-            new JMTween(this.graphic, 100).to({rotation: 0}).start();
-            this.hoverTween = null;
-        }
-
-        this.target && this.target.endHoverEffect();
     }
 
     protected interactionCompleteEffect() {

@@ -1,12 +1,8 @@
 import * as PIXI from 'pixi.js';
-import { CONFIG } from '../../Config';
-import { Colors } from '../../data/Colors';
 import { Firework } from '../../JMGE/effects/Firework';
 import { JMEasing, JMTween } from '../../JMGE/JMTween';
-import { GameEvents } from '../../services/GameEvents';
 import { JMTweenEffect } from '../../services/JMTweenEffects';
 import { DraggableGraphics } from './DraggableGraphics';
-import { DraggableTarget } from './DraggableTarget';
 
 export class DraggableGraphicsInexhaustible extends DraggableGraphics {
     protected interactionCompleteEffect() {

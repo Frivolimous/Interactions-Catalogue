@@ -24,9 +24,9 @@ export class DragSortingUI extends BaseUI {
     this.addChild(this.title, this.restartButton);
 
     this.targets = [
-      new DraggableTarget('square', 150, Colors.TARGETS[1], this.background),
-      new DraggableTarget('square', 150, Colors.TARGETS[0], this.background),
-      new DraggableTarget('square', 150, Colors.TARGETS[2], this.background),
+      new DraggableTarget('square', 150, Colors.TARGETS[1]),
+      new DraggableTarget('square', 150, Colors.TARGETS[0]),
+      new DraggableTarget('square', 150, Colors.TARGETS[2]),
     ];
 
     this.draggable = new DraggableGraphics('square', 70, Colors.OPTIONS[0], this.background);

@@ -23,7 +23,7 @@ export class DragAllTargetUI extends BaseUI {
     this.restartButton = new Button({label: 'Restart', onClick: this.resetScene, width: 50, height: 30});
     this.addChild(this.title, this.restartButton);
 
-    this.target = new DraggableTarget('square', 150, Colors.TARGET, this.background);
+    this.target = new DraggableTarget('square', 150, Colors.TARGET);
     this.addChild(this.target);
 
     this.draggables.push(new DraggableGraphics('square', 70, Colors.OPTIONS[0], this.background));

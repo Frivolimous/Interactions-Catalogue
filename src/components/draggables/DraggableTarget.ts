@@ -5,12 +5,14 @@ import { JMEasing, JMTween } from '../../JMGE/JMTween';
 import { JMTweenEffect } from '../../services/JMTweenEffects';
 
 export class DraggableTarget extends PIXI.Container {
+    public disabled = false;
+
     public graphic: PIXI.Graphics = new PIXI.Graphics();
-    private hitbox: PIXI.Graphics = new PIXI.Graphics();
+    protected hitbox: PIXI.Graphics = new PIXI.Graphics();
 
-    private hoverTween: JMTween;
+    protected hoverTween: JMTween;
 
-    constructor(shape: 'square' | 'circle', size: number, color: number, private canvas: PIXI.Container) {
+    constructor(shape: 'square' | 'circle', size: number, color: number) {
         super();
         this.graphic.beginFill(color).lineStyle(1, Colors.OUTLINE);
 

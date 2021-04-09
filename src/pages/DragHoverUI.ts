@@ -3,28 +3,28 @@ import { BaseUI } from './_BaseUI';
 import { Fonts } from '../data/Fonts';
 import { IResizeEvent } from '../services/GameEvents';
 import { Colors } from '../data/Colors';
-import { DraggableGraphics } from '../components/draggables/DraggableGraphics';
+import { DraggableGraphicsHover } from '../components/draggables/DraggableGraphicsHover';
 import { Button } from '../components/ui/Button';
 import { JMTweenEffect } from '../services/JMTweenEffects';
-import { DraggableTarget } from '../components/draggables/DraggableTarget';
+import { DraggableTargetProgressive } from '../components/draggables/DraggableTargetProgressive';
 
-export class DragTargetUI extends BaseUI {
+export class DragHoverUI extends BaseUI {
   private title: PIXI.Text;
   private restartButton: Button;
 
   private hintTimeout: number;
 
-  private draggable: DraggableGraphics;
-  private target: DraggableTarget;
+  private draggable: DraggableGraphicsHover;
+  private target: DraggableTargetProgressive;
 
   constructor() {
     super({bgColor: Colors.BACKGROUND});
-    this.title = new PIXI.Text('Drag Target', { fontSize: 30, fontFamily: Fonts.UI, fill: Colors.TEXT });
+    this.title = new PIXI.Text('Drag Hover', { fontSize: 30, fontFamily: Fonts.UI, fill: Colors.TEXT });
     this.restartButton = new Button({label: 'Restart', onClick: this.resetScene, width: 50, height: 30});
     this.addChild(this.title, this.restartButton);
 
-    this.target = new DraggableTarget('square', 150, Colors.TARGET);
-    this.draggable = new DraggableGraphics('square', 70, Colors.OPTIONS[0], this.background);
+    this.target = new DraggableTargetProgressive('square', 150, Colors.TARGET, Colors.TARGETS[0]);
+    this.draggable = new DraggableGraphicsHover('square', 70, Colors.OPTIONS[0], this.background);
     this.draggable.onInteractionStart = this.resetMovingHintTimer;
     this.draggable.onInteractionEnd = this.resetIdleHintTimer;
     this.draggable.onHoverStart = this.pauseHintTimer;
@@ -34,8 +34,14 @@ export class DragTargetUI extends BaseUI {
 
     this.draggable.setTarget(this.target);
 
-    this.draggable.setStartingPosition(150, 400);
+    this.draggable.position.set(150, 400);
     this.target.position.set(600, 400);
+
+    this.target.onProgressComplete = () => {
+      this.draggable.removeTarget();
+      this.pauseHintTimer();
+      // this.draggable.completeAndDestroy();
+    };
 
     this.resetIdleHintTimer();
   }
@@ -52,7 +58,7 @@ export class DragTargetUI extends BaseUI {
   }
 
   private resetScene = () => {
-    this.navForward(new DragTargetUI(), this.previousUI);
+    this.navForward(new DragHoverUI(), this.previousUI);
   }
 
   private resetIdleHintTimer = () => {
@@ -73,7 +79,7 @@ export class DragTargetUI extends BaseUI {
   }
 
   private runIdleHint = () => {
-    if (!this.draggable.exists) return;
+    if (!this.draggable.exists || this.target.disabled) return;
 
     JMTweenEffect.Pop(this.draggable.graphic);
     JMTweenEffect.Pop(this.target.graphic, 1.15).wait(150);
@@ -82,6 +88,7 @@ export class DragTargetUI extends BaseUI {
   }
 
   private runMovingHint = () => {
+    if (this.target.disabled) return;
     JMTweenEffect.Pop(this.target, 1.15);
 
     this.resetMovingHintTimer();

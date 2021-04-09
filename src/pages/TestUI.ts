@@ -18,6 +18,7 @@ export class TestUI extends BaseUI {
     super({bgColor: Colors.BACKGROUND});
 
     AssetLoader.getBody('sheep', data => {
+      console.log("GOT THE DATA");
       let dragon = new DragonSpriteBasic(data);
       this.addChild(dragon.display);
       dragon.display.scale.set(0.5);

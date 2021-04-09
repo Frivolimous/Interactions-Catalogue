@@ -18,7 +18,7 @@ export class MenuUI extends BaseUI {
 
   constructor() {
     super({bgColor: Colors.BACKGROUND});
-    this.title = new PIXI.Text(StringData.TITLE, { fontSize: 30, fontFamily: Fonts.UI, fill: Colors.TEXT });
+    this.title = new PIXI.Text('Interactions Catalogue', { fontSize: 30, fontFamily: Fonts.UI, fill: Colors.TEXT });
     this.addChild(this.title);
 
     this.startB = new Button({ width: 100, height: 30, label: 'Start', onClick: this.startGame });

@@ -46,7 +46,9 @@ export let Facade = new class FacadeInner {
     if (border && border.toLowerCase() === 'true') {
       CONFIG.INIT.BORDER = true;
     }
-    if (navbar && navbar.toLowerCase() === 'true') {
+    if (navbar && navbar.toLowerCase() === 'false') {
+      CONFIG.INIT.NAVBAR = false;
+    } else {
       CONFIG.INIT.NAVBAR = true;
     }
 

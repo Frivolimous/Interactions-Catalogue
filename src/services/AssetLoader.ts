@@ -10,8 +10,10 @@ export const AssetLoader = new class AssetLoaderC {
   constructor() { }
 
   public getBody(slug: string, callback: (data: ILoadedBody) => void) {
+    console.log("START GET BODY");
     let def = AssetLoaderC.bodyDefs[slug];
     if (def) {
+      console.log("DEF");
       if (isLoaderQueue(def)) {
         def.queue.push({ slug, callback });
       } else {
@@ -19,11 +21,14 @@ export const AssetLoader = new class AssetLoaderC {
       }
       return;
     } else {
+      console.log("NO DEF");
       AssetLoaderC.bodyDefs[slug] = { type: 'queue', queue: [] };
     }
     let chunk = (TextureData.bodies as any)[slug];
     let slugs = [chunk.skeleton, chunk.texture_json, chunk.texture_png];
+    console.log("PRE SHARE");
     getSharedResource({slugs, callback: loaded => {
+        console.log("SHARED LOADED");
         let skeleton = loaded.res[slugs[0]].data;
         let texture_json = loaded.res[slugs[1]].data;
         let texture_png = loaded.res[slugs[2]].texture;
@@ -82,7 +87,9 @@ let getSharedResource = (packet: IPixiLoaderPacket) => {
       }
     } else if (!PIXI.Loader.shared.loading) {
       unloaded.forEach(slug => PIXI.Loader.shared.add(slug, slug));
+      console.log("PRE-LOAD");
       PIXI.Loader.shared.load((loader, res) => {
+        console.log("LOADED!!!");
         packet.callback({ res, newLoad: true });
         if (loaderQueue.length > 0) {
           getSharedResource(loaderQueue.shift());

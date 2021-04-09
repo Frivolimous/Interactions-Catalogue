@@ -17,20 +17,30 @@ export class DraggableGraphicsContained extends DraggableGraphics {
 
     }
     protected interactionCompleteEffect() {
+        this.targetPosition = null;
+
         this.hitbox.interactive = false;
         JMTweenEffect.ShrinkAndDisappear(this.graphic, () => {
             Firework.makeExplosion(this.parent, {x: this.x, y: this.y, count: 70, mag_min: 2, fade: 0.06, tint: this.color});
             this.hitbox.interactive = true;
             if (this.startingPosition) {
                 this.position.set(this.startingPosition.x, this.startingPosition.y);
+                this.vX = 0;
+                this.vY = 0;
+        
             }
         });
     }
 
     protected endDragEffect() {
+        this.targetPosition = null;
+
         new JMTween(this.graphic.scale, 200).to({x: 0, y: 0}).start().onComplete(() => {
             if (this.startingPosition) {
                 this.position.set(this.startingPosition.x, this.startingPosition.y);
+                this.vX = 0;
+                this.vY = 0;
+        
             }
         });
     }

@@ -9,13 +9,20 @@ import { DraggableTarget } from './DraggableTarget';
 
 export class DraggableGraphics extends PIXI.Container {
     public exists = true;
-    public moveRatio = 0.1;
+    public boundsRatio = 0.1;
+    public vRatio: number = 0.015;
+    public friction: number = 0.85;
+
+    public moveMode: 'physics' | 'discreet' | 'instant' = 'physics';
+    public returnMode: 'zip' | 'drift' | 'respawn' = 'zip';
 
     public onInteractionStart: () => void;
     public onInteractionEnd: () => void;
     public onHoverStart: () => void;
     public onHoverEnd: () => void;
     public onInteractionSuccess: (object: DraggableGraphics) => void;
+
+    public outerBounds: PIXI.Rectangle;
 
     public graphic: PIXI.Graphics = new PIXI.Graphics();
     protected hitbox: PIXI.Graphics = new PIXI.Graphics();
@@ -33,7 +40,12 @@ export class DraggableGraphics extends PIXI.Container {
 
     protected hoverTween: JMTween;
 
-    constructor(shape: 'square' | 'circle', size: number, protected color: number, protected canvas: PIXI.Container) {
+    protected vX: number = 0;
+    protected vY: number = 0;
+
+    protected drifting = false;
+
+    constructor(shape: 'square' | 'circle', protected size: number, protected color: number, protected canvas: PIXI.Container) {
         super();
         this.graphic.beginFill(color).lineStyle(1, Colors.OUTLINE);
 
@@ -112,6 +124,8 @@ export class DraggableGraphics extends PIXI.Container {
         this.offsetDot.position.set(-this.dragOffset.x, -this.dragOffset.y);
         this.startDragEffect();
         this.onInteractionStart && this.onInteractionStart();
+
+        this.drifting = false;
     }
 
     protected endDrag = (e: PIXI.interaction.InteractionEvent) => {
@@ -145,8 +159,16 @@ export class DraggableGraphics extends PIXI.Container {
         if (!this.exists) return;
 
         if (this.targetPosition) {
-            this.x = this.x + (this.targetPosition.x - this.x) * this.moveRatio;
-            this.y = this.y + (this.targetPosition.y - this.y) * this.moveRatio;
+            if (this.moveMode === 'physics') {
+                this.vX += (this.targetPosition.x - this.x) * this.vRatio;
+                this.vY += (this.targetPosition.y - this.y) * this.vRatio;
+            } else if (this.moveMode === 'discreet') {
+                this.x = this.x + (this.targetPosition.x - this.x) * this.boundsRatio;
+                this.y = this.y + (this.targetPosition.y - this.y) * this.boundsRatio;
+            } else if (this.moveMode === 'instant') {
+                this.x = this.targetPosition.x;
+                this.y = this.targetPosition.y;
+            }
 
             if (this.target) {
                 if (this.isOverTarget(this.target)) {
@@ -172,6 +194,35 @@ export class DraggableGraphics extends PIXI.Container {
                         }
                     });
                 }
+            }
+        } else if (this.startingPosition && this.returnMode === 'drift') {
+            this.vX += Math.min(Math.max(this.boundsRatio * 0.01 * (this.startingPosition.x - this.x), -0.03), 0.03);
+            this.vY += Math.min(Math.max(this.boundsRatio * 0.01 * (this.startingPosition.y - this.y), -0.03), 0.03);
+        }
+
+        if (this.moveMode === 'physics') {
+            this.vX *= this.friction;
+            this.vY *= this.friction;
+
+            this.x += this.vX;
+            this.y += this.vY;
+        }
+
+        this.boundsCheck();
+    }
+
+    protected boundsCheck = () => {
+        if (this.outerBounds) {
+            if (this.x < this.outerBounds.left + this.size) {
+                this.x += (this.outerBounds.left + this.size - this.x) * this.boundsRatio;
+            } else if (this.x > this.outerBounds.right - this.size) {
+                this.x += (this.outerBounds.right - this.size - this.x) * this.boundsRatio;
+            }
+
+            if (this.y < this.outerBounds.top + this.size) {
+                this.y += (this.outerBounds.top + this.size - this.y) * this.boundsRatio;
+            } else if (this.y > this.outerBounds.bottom - this.size) {
+                this.y += (this.outerBounds.bottom - this.size - this.y) * this.boundsRatio;
             }
         }
     }
@@ -206,11 +257,24 @@ export class DraggableGraphics extends PIXI.Container {
     }
 
     protected endDragEffect() {
-        if (this.startingPosition) {
-            // JMTweenEffect.RespawnAt(this, this.startingPosition);
-            JMTweenEffect.ZipTo(this, this.startingPosition);
-            new JMTween(this.graphic.scale, 150).to({x: 1, y: 1}).start();
+        if (this.moveMode === 'physics' || this.moveMode === 'instant') {
             this.targetPosition = null;
+        }
+        if (this.startingPosition) {
+            if (this.returnMode === 'zip') {
+                JMTweenEffect.ZipTo(this, this.startingPosition);
+            } else if (this.returnMode === 'respawn') {
+                JMTweenEffect.RespawnAt(this, this.startingPosition);
+            } else if (this.returnMode === 'drift') {
+
+            }
+            new JMTween(this.graphic.scale, 150).to({x: 1, y: 1}).start();
+            if (this.moveMode === 'discreet') {
+                this.targetPosition = null;
+            } else if (this.moveMode === 'physics' && this.returnMode !== 'drift') {
+                this.vX = 0;
+                this.vY = 0;
+            }
         } else {
             new JMTween(this.graphic.scale, 150).to({x: 0.9, y: 0.9}).easing(JMEasing.Quadratic.Out).start();
         }
@@ -262,6 +326,7 @@ export class DraggableGraphics extends PIXI.Container {
     }
 
     protected interactionIncorrectEffect(target: DraggableTarget) {
+        this.targetPosition = null;
         this.hitbox.interactive = false;
         new JMTween(this, 0).wait(1000).start().onComplete(() => {
             this.hitbox.interactive = true;

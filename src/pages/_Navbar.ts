@@ -29,6 +29,24 @@ export const UIReferences: {name: string, query: string, class: any}[] = [
   {name: 'Drag Hover', query: 'drag-hover', class: DragHoverUI },
   {name: 'Drag Scrub', query: 'drag-scrub', class: DragScrubUI },
   {name: 'Drag Follow', query: 'drag-follow', class: DragFollowUI },
+  // {name: 'Drag Multiple Reuse', query: 'drag-multiple-reuse', class: DragMultipleReuseUI },
+  // {name: 'Drag Clothing', query: 'drag-clothing', class: DragClothingUI },
+  // {name: 'Drag Slider', query: 'drag-slider', class: DragSliderUI },
+  // {name: 'Drag Puzzle', query: 'drag-puzzle', class: DragPuzzleUI },
+  // {name: 'Drag Physics', query: 'drag-physics', class: DragPhysicsUI },
+
+  // {name: 'Tap Object', query: 'tap-object', class: TapObjectUI },
+  // {name: 'Tap Multiple', query: 'tap-multiple', class: TapMultipleUI },
+  // {name: 'Tap Locations', query: 'tap-locations', class: TapLocationsUI },
+
+  // {name: 'UI Button', query: 'ui-button', class: UIButtonUI },
+  // {name: 'UI Camera', query: 'ui-camera', class: UICameraUI },
+  // {name: 'UI Multiple Choice', query: 'ui-multiple-choice', class: UIMultipleChoiceUI },
+  // {name: 'UI Overlay', query: 'ui-overlay', class: UIOverlayUI },
+  // {name: 'Tap Repeatedly', query: 'tap-repeatedly', class: TapRepeatedlyUI },
+  // {name: 'UI Select Option', query: 'ui-select-option', class: UISelectOptionUI },
+  // {name: '', query: '', class: },
+  // {name: '', query: '', class: },
   {name: 'Nowhere', query: 'blank', class: BlankUI},
 ];
 export class Navbar extends PIXI.Container {

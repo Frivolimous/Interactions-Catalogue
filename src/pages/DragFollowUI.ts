@@ -7,13 +7,13 @@ import { Button } from '../components/ui/Button';
 import { JMTweenEffect } from '../services/JMTweenEffects';
 import { DraggableTargetProgressive } from '../components/draggables/DraggableTargetProgressive';
 import { Firework } from '../JMGE/effects/Firework';
-import { DraggableGraphicsPhysics } from '../components/draggables/DraggableGraphicsPhysics';
+import { DraggableGraphics } from '../components/draggables/DraggableGraphics';
 
 export class DragFollowUI extends BaseUI {
   private title: PIXI.Text;
   private restartButton: Button;
 
-  private draggable: DraggableGraphicsPhysics;
+  private draggable: DraggableGraphics;
 
   constructor() {
     super({bgColor: Colors.BACKGROUND});
@@ -21,14 +21,17 @@ export class DragFollowUI extends BaseUI {
     this.restartButton = new Button({label: 'Restart', onClick: this.resetScene, width: 50, height: 30});
     this.addChild(this.title, this.restartButton);
 
-    this.draggable = new DraggableGraphicsPhysics('square', 70, Colors.OPTIONS[0], this.background);
+    this.draggable = new DraggableGraphics('square', 70, Colors.OPTIONS[0], this.background);
+    this.draggable.vRatio = 0.006;
+    this.draggable.friction = 0.95;
+    this.draggable.returnMode = 'drift';
 
     this.addChild(this.draggable);
-    this.draggable.position.set(400, 400);
+    this.draggable.setStartingPosition(400, 400);
+    // this.draggable.position.set(400, 400);
 
   }
   public navIn = () => {
-
     this.draggable.animateAppear().wait(300);
   }
 
@@ -36,6 +39,8 @@ export class DragFollowUI extends BaseUI {
     this.title.x = (e.innerBounds.width - this.title.width) / 2;
     this.title.y = 50;
     this.restartButton.position.set(e.innerBounds.right - 100, e.innerBounds.top + 30);
+
+    if (this.draggable) this.draggable.outerBounds = e.innerBounds;
   }
 
   private resetScene = () => {

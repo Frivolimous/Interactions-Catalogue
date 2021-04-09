@@ -17,7 +17,7 @@ export class DraggableGraphicsScrub extends DraggableGraphics {
     constructor(shape: 'square' | 'circle', size: number, protected color: number, protected canvas: PIXI.Container) {
         super(shape, size, color, canvas);
 
-        this.moveRatio = 0.3;
+        this.moveMode = 'instant';
     }
 
     public completeAndDestroy() {
@@ -42,8 +42,8 @@ export class DraggableGraphicsScrub extends DraggableGraphics {
         if (this.targetPosition) {
             this.previousPosition.set(this.x, this.y);
 
-            this.x = this.x + (this.targetPosition.x - this.x) * this.moveRatio;
-            this.y = this.y + (this.targetPosition.y - this.y) * this.moveRatio;
+            this.x = this.targetPosition.x;
+            this.y = this.targetPosition.y;
 
             if (this.target) {
                 if (this.isOverTarget(this.target)) {
@@ -64,6 +64,8 @@ export class DraggableGraphicsScrub extends DraggableGraphics {
                 }
             }
         }
+
+        this.boundsCheck();
     }
 
     protected startHoverEffect() {

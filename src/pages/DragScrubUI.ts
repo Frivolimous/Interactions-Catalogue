@@ -58,6 +58,8 @@ export class DragScrubUI extends BaseUI {
     this.title.x = (e.innerBounds.width - this.title.width) / 2;
     this.title.y = 50;
     this.restartButton.position.set(e.innerBounds.right - 100, e.innerBounds.top + 30);
+
+    if (this.draggable) this.draggable.outerBounds = e.innerBounds;
   }
 
   private resetScene = () => {

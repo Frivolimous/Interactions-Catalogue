@@ -23,7 +23,6 @@ export class DraggableGraphicsHover extends DraggableGraphics {
 
     protected endDrag = (e: PIXI.interaction.InteractionEvent) => {
         this.dragOffset = null;
-        this.targetPosition = null;
         this.offsetDot.visible = false;
 
         this.endDragEffect();

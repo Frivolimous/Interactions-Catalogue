@@ -7,6 +7,7 @@ import { DraggableGraphicsHover } from '../components/draggables/DraggableGraphi
 import { Button } from '../components/ui/Button';
 import { JMTweenEffect } from '../services/JMTweenEffects';
 import { DraggableTargetProgressive } from '../components/draggables/DraggableTargetProgressive';
+import { Firework } from '../JMGE/effects/Firework';
 
 export class DragHoverUI extends BaseUI {
   private title: PIXI.Text;
@@ -40,6 +41,9 @@ export class DragHoverUI extends BaseUI {
     this.target.onProgressComplete = () => {
       this.draggable.removeTarget();
       this.pauseHintTimer();
+
+      Firework.makeExplosion(this, {x: this.target.x, y: this.target.y, count: 70, mag_min: 2, fade: 0.06, tint: Colors.OPTIONS[0]});
+
       // this.draggable.completeAndDestroy();
     };
 

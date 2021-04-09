@@ -3,10 +3,11 @@ import { BaseUI } from './_BaseUI';
 import { Fonts } from '../data/Fonts';
 import { IResizeEvent } from '../services/GameEvents';
 import { Colors } from '../data/Colors';
-import { DraggableGraphicsHover } from '../components/draggables/DraggableGraphicsHover';
+import { DraggableGraphicsScrub } from '../components/draggables/DraggableGraphicsScrub';
 import { Button } from '../components/ui/Button';
 import { JMTweenEffect } from '../services/JMTweenEffects';
 import { DraggableTargetProgressive } from '../components/draggables/DraggableTargetProgressive';
+import { Firework } from '../JMGE/effects/Firework';
 
 export class DragScrubUI extends BaseUI {
   private title: PIXI.Text;
@@ -14,7 +15,7 @@ export class DragScrubUI extends BaseUI {
 
   private hintTimeout: number;
 
-  private draggable: DraggableGraphicsHover;
+  private draggable: DraggableGraphicsScrub;
   private target: DraggableTargetProgressive;
 
   constructor() {
@@ -24,7 +25,7 @@ export class DragScrubUI extends BaseUI {
     this.addChild(this.title, this.restartButton);
 
     this.target = new DraggableTargetProgressive('square', 150, Colors.TARGET, Colors.TARGETS[0]);
-    this.draggable = new DraggableGraphicsHover('square', 70, Colors.OPTIONS[0], this.background);
+    this.draggable = new DraggableGraphicsScrub('square', 70, Colors.OPTIONS[0], this.background);
     this.draggable.onInteractionStart = this.resetMovingHintTimer;
     this.draggable.onInteractionEnd = this.resetIdleHintTimer;
     this.draggable.onHoverStart = this.pauseHintTimer;
@@ -40,6 +41,8 @@ export class DragScrubUI extends BaseUI {
     this.target.onProgressComplete = () => {
       this.draggable.removeTarget();
       this.pauseHintTimer();
+      Firework.makeExplosion(this, {x: this.target.x, y: this.target.y, count: 70, mag_min: 2, fade: 0.06, tint: Colors.OPTIONS[0]});
+
       // this.draggable.completeAndDestroy();
     };
 

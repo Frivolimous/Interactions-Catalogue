@@ -10,10 +10,15 @@ import { DraggableTarget } from './DraggableTarget';
 import { DraggableTargetProgressive } from './DraggableTargetProgressive';
 
 export class DraggableGraphicsScrub extends DraggableGraphics {
+    public scrubRatio = 0.0003;
 
-    // constructor(shape: 'square' | 'circle', size: number, protected color: number, protected canvas: PIXI.Container) {
-    //     super(shape, size, color, canvas);
-    // }
+    private previousPosition: PIXI.Point = new PIXI.Point();
+
+    constructor(shape: 'square' | 'circle', size: number, protected color: number, protected canvas: PIXI.Container) {
+        super(shape, size, color, canvas);
+
+        this.moveRatio = 0.3;
+    }
 
     public completeAndDestroy() {
         this.exists = false;
@@ -23,12 +28,42 @@ export class DraggableGraphicsScrub extends DraggableGraphics {
 
     protected endDrag = (e: PIXI.interaction.InteractionEvent) => {
         this.dragOffset = null;
-        this.targetPosition = null;
         this.offsetDot.visible = false;
+        this.overTarget = false;
 
         this.endDragEffect();
 
         this.onInteractionEnd && this.onInteractionEnd();
+    }
+
+    protected onTick = () => {
+        if (!this.exists) return;
+
+        if (this.targetPosition) {
+            this.previousPosition.set(this.x, this.y);
+
+            this.x = this.x + (this.targetPosition.x - this.x) * this.moveRatio;
+            this.y = this.y + (this.targetPosition.y - this.y) * this.moveRatio;
+
+            if (this.target) {
+                if (this.isOverTarget(this.target)) {
+                    if (this.overTarget !== this.target) {
+                        this.onOverTarget();
+                    } else {
+                        let dX = this.x - this.previousPosition.x;
+                        let dY = this.y - this.previousPosition.y;
+
+                        let distance = Math.sqrt(dX * dX + dY * dY);
+
+                        (this.target as DraggableTargetProgressive).progressBy(distance * this.scrubRatio);
+                    }
+                } else {
+                    if (this.overTarget === this.target) {
+                        this.onOffTarget();
+                    }
+                }
+            }
+        }
     }
 
     protected startHoverEffect() {

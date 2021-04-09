@@ -34,7 +34,11 @@ export class DraggableTargetProgressive extends DraggableTarget {
     public tickProgress = () => {
         if (this.disabled) return;
 
-        this.percent += this.increment;
+        this.progressBy(this.increment);
+    }
+
+    public progressBy = (percent: number) => {
+        this.percent += percent;
 
         if (this.percent >= 1) {
             this.disabled = true;

@@ -15,6 +15,7 @@ import { DragOptionSingleUI } from './DragOptionSingleUI';
 import { DragOptionContaineredUI } from './DragOptionContaineredUI';
 import { DragHoverUI } from './DragHoverUI';
 import { DragScrubUI } from './DragScrubUI';
+import { DragFollowUI } from './DragFollowUI';
 
 export const UIReferences: {name: string, query: string, class: any}[] = [
   {name: 'Main Menu', query: 'menu', class: MenuUI},
@@ -27,6 +28,7 @@ export const UIReferences: {name: string, query: string, class: any}[] = [
   {name: 'Drag Option: Containered', query: 'drag-option-containered', class: DragOptionContaineredUI },
   {name: 'Drag Hover', query: 'drag-hover', class: DragHoverUI },
   {name: 'Drag Scrub', query: 'drag-scrub', class: DragScrubUI },
+  {name: 'Drag Follow', query: 'drag-follow', class: DragFollowUI },
   {name: 'Nowhere', query: 'blank', class: BlankUI},
 ];
 export class Navbar extends PIXI.Container {

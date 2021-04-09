@@ -9,6 +9,7 @@ import { DraggableTarget } from './DraggableTarget';
 
 export class DraggableGraphics extends PIXI.Container {
     public exists = true;
+    public moveRatio = 0.1;
 
     public onInteractionStart: () => void;
     public onInteractionEnd: () => void;
@@ -23,7 +24,7 @@ export class DraggableGraphics extends PIXI.Container {
     protected dragOffset: PIXI.Point;
     protected targetPosition: PIXI.Point;
     protected overTarget: DraggableTarget | false = false;
-    protected moveRatio = 0.1;
+
     protected startingPosition: PIXI.Point;
 
     protected target: DraggableTarget;
@@ -63,7 +64,7 @@ export class DraggableGraphics extends PIXI.Container {
         this.hitbox.addListener('pointerdown', this.startDrag);
         this.hitbox.addListener('pointerup', e => this.endDrag(e));
         this.hitbox.addListener('pointerupoutside', e => this.endDrag(e));
-        GameEvents.ticker.add(this.onTick);
+        GameEvents.ticker.add(() => this.onTick());
         canvas.addListener('pointermove', this.moveDrag);
     }
 
@@ -115,7 +116,6 @@ export class DraggableGraphics extends PIXI.Container {
 
     protected endDrag = (e: PIXI.interaction.InteractionEvent) => {
         this.dragOffset = null;
-        this.targetPosition = null;
         this.offsetDot.visible = false;
 
         if (this.overTarget === this.target) {
@@ -210,6 +210,7 @@ export class DraggableGraphics extends PIXI.Container {
             // JMTweenEffect.RespawnAt(this, this.startingPosition);
             JMTweenEffect.ZipTo(this, this.startingPosition);
             new JMTween(this.graphic.scale, 150).to({x: 1, y: 1}).start();
+            this.targetPosition = null;
         } else {
             new JMTween(this.graphic.scale, 150).to({x: 0.9, y: 0.9}).easing(JMEasing.Quadratic.Out).start();
         }

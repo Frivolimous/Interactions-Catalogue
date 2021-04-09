@@ -86,7 +86,8 @@ let getSharedResource = (packet: IPixiLoaderPacket) => {
         getSharedResource(loaderQueue.shift());
       }
     } else if (!PIXI.Loader.shared.loading) {
-      unloaded.forEach(slug => PIXI.Loader.shared.add(slug, slug));
+      console.log("CORS ANON");
+      unloaded.forEach(slug => PIXI.Loader.shared.add(slug, slug, {crossOrigin: 'anonymous'}));
       console.log("PRE-LOAD");
       PIXI.Loader.shared.load((loader, res) => {
         console.log("LOADED!!!");

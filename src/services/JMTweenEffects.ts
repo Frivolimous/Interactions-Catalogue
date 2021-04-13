@@ -10,14 +10,31 @@ export class JMTweenEffect {
         return tween;
     }
 
-    public static ShrinkAndDisappear(object: PIXI.Container, onComplete: () => void = null) {
-        let tween = new JMTween(object.scale, 300).to({x: 1.4, y: 1.4}).easing(JMEasing.Sinusoidal.Out);
+    public static PopShadow(object: PIXI.Container, scale = 1.3, duration = 800) {
+        let tween = new JMTween(object.scale, duration / 2).to({x: scale}).easing(JMEasing.Back.In);
+        tween.chain(object.scale, duration / 2).to({x: 1}).easing(JMEasing.Back.Out);
+        tween.start();
+
+        return tween;
+    }
+
+    public static ShrinkAndDisappear(object: PIXI.Container, onComplete: () => void = null, scale: number = 1.4) {
+        let tween = new JMTween(object.scale, 300).to({x: scale, y: scale}).easing(JMEasing.Sinusoidal.Out);
         let tween2 = tween.chain(object.scale, 200).to({x: 0, y: 0});
         onComplete && tween2.onComplete(onComplete);
         tween.start();
 
         return tween;
     }
+
+    public static ShrinkAndDisappearShadow(object: PIXI.Container, scale: number = 1.4) {
+        let tween = new JMTween(object.scale, 300).to({x: scale}).easing(JMEasing.Sinusoidal.Out).start();
+        tween.chain(object.scale, 200).to({x: 0, y: 0});
+
+        return tween;
+    }
+
+    // public static ShrinkAway(object: PIXI.Container, onComplete: () => void = null)
 
     public static Reappear(object: PIXI.Container) {
         let tween = new JMTween(object.scale, 300).to({x: 1, y: 1}).easing(JMEasing.Back.Out).start();
@@ -50,7 +67,10 @@ export class JMTweenEffect {
         return tween;
     }
 
-    public static ShakeNo(object: PIXI.Container, offset: number = 10, duration = 800) {
+    public static ShakeNo(object: PIXI.Graphics, offset: number = 10, duration = 800) {
+        new JMTween(object, 100).colorTo({tint: 0x777777}).start()
+        .chain(object, 100).colorTo({tint: 0xffffff}).wait(1400);
+
         let x = object.x;
         let tween = new JMTween(object, duration / 4).to({x: x + offset}).start();
         tween.chain(object, duration / 4).to({x: x - offset}).yoyo(true, 1)

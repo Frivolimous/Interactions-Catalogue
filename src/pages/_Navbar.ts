@@ -8,6 +8,7 @@ import { Facade } from '../index';
 import { BlankUI } from './BlankUI';
 import { TestUI } from './TestUI';
 import { DragTargetUI } from './DragTargetUI';
+import { TapObjectUI } from './TapObjectUI';
 import { DragSortingUI } from './DragSortingUI';
 import { DragAllTargetUI } from './DragAllTargetUI';
 import { DragOptionInexhaustibleUI } from './DragOptionInexhaustibleUI';
@@ -18,6 +19,10 @@ import { DragScrubUI } from './DragScrubUI';
 import { DragFollowUI } from './DragFollowUI';
 import { DragMultipleReuseUI } from './DragMultipleReuseUI';
 import { CONFIG } from '../Config';
+import { TapMultipleUI } from './TapMultipleUI';
+import { TapRepeatedlyUI } from './TapRepeatedlyUI';
+import { TapRepeatedly2UI } from './TapRepeatedly2UI';
+import { TapMultipleChoiceUI } from './TapMultipleChoiceUI';
 
 export interface INavConfig {
   name: string;
@@ -45,17 +50,25 @@ export const UIReferences: INavConfig[] = [
   // {name: 'Drag Puzzle', query: 'drag-puzzle', class: DragPuzzleUI },
   // {name: 'Drag Physics', query: 'drag-physics', class: DragPhysicsUI },
 
-  // {name: 'Tap Object', query: 'tap-object', class: TapObjectUI },
-  // {name: 'Tap Multiple', query: 'tap-multiple', class: TapMultipleUI },
+  {name: 'Tap Object', query: 'tap-object', class: TapObjectUI },
+  {name: 'Tap Multiple', query: 'tap-multiple', class: TapMultipleUI },
   // {name: 'Tap Locations', query: 'tap-locations', class: TapLocationsUI },
+  {name: 'Tap Repeatedly', query: 'tap-repeatedly', class: TapRepeatedlyUI },
+  {name: 'Tap Repeatedly 2', query: 'tap-repeatedly-2', class: TapRepeatedly2UI },
+  {name: 'Tap Multiple Choice', query: 'ui-multiple-choice', class: TapMultipleChoiceUI },
 
   // {name: 'UI Button', query: 'ui-button', class: UIButtonUI },
   // {name: 'UI Camera', query: 'ui-camera', class: UICameraUI },
-  // {name: 'UI Multiple Choice', query: 'ui-multiple-choice', class: UIMultipleChoiceUI },
   // {name: 'UI Overlay', query: 'ui-overlay', class: UIOverlayUI },
-  // {name: 'Tap Repeatedly', query: 'tap-repeatedly', class: TapRepeatedlyUI },
   // {name: 'UI Select Option', query: 'ui-select-option', class: UISelectOptionUI },
-  // {name: '', query: '', class: },
+  // {name: 'Scroll List', query: 'scroll-list', class: ScrollListUI },
+
+  // {name: 'Drag to Scroll', query: 'drag-scroll', class: DragScrollUI },
+  // {name: 'Swipe Page', query: 'swipe-page', class: SwipePageUI },
+  // {name: 'Connect Dots', query: 'connect-dots', class: ConnectDotsUI },
+  // {name: 'Drag Circular', query: 'drag-circular', class: DragCircularUI },
+  // {name: 'Drag in Circle', query: 'drag-circle', class: DragCircleUI },
+
   // {name: '', query: '', class: },
   {name: 'Nowhere', query: 'blank', class: BlankUI, red: true},
 ];

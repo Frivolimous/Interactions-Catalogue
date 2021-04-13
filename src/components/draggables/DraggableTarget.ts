@@ -16,12 +16,14 @@ export class DraggableTarget extends PIXI.Container {
 
     public hoverTween: JMTween;
 
-    constructor(shape: 'square' | 'circle', size: number, color: number) {
+    constructor(shape: 'square' | 'circle' | 'tall', size: number, color: number) {
         super();
         this.graphic.beginFill(color).lineStyle(1, Colors.OUTLINE);
 
         if (shape === 'square') {
             this.graphic.drawRoundedRect(-size / 2, - size / 2, size, size, size / 5);
+        } else if (shape === 'tall') {
+            this.graphic.drawRoundedRect(-size / 2, - size, size, size * 2, size / 5);
         } else {
             this.graphic.drawCircle(0, 0, size);
         }
@@ -35,7 +37,11 @@ export class DraggableTarget extends PIXI.Container {
         }
 
         let hitsize = Math.max(size * 1.5, CONFIG.INIT.MIN_HITSIZE);
-        this.hitbox.drawRect(-hitsize / 2, -hitsize / 2, hitsize, hitsize);
+        if (shape === 'tall') {
+            this.hitbox.drawRect(-hitsize / 2, -hitsize * 2 / 2, hitsize, hitsize * 2);
+        } else {
+            this.hitbox.drawRect(-hitsize / 2, -hitsize / 2, hitsize, hitsize);
+        }
     }
 
     public getHitBox = () => {
@@ -64,9 +70,6 @@ export class DraggableTarget extends PIXI.Container {
     }
 
     public incorrectEffect = () => {
-        new JMTween(this.graphic, 100).colorTo({tint: 0x777777}).start()
-            .chain(this.graphic, 100).colorTo({tint: 0xffffff}).wait(1400);
-
         JMTweenEffect.ShakeNo(this.graphic, 10, 800).wait(300);
     }
 }
